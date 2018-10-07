@@ -1,0 +1,218 @@
+@charset "utf-8";
+html {
+	font-family: Microsoft Yahei,sans-serif;
+}
+body{
+	color: #493F3F;
+	width: 100%;
+	height: 100%;
+}
+ul {
+	list-style: none;
+	margin: 0 0 0 6px;
+	padding: 0;
+	position: relative;
+	top: 0px;
+}
+.sora-notification-board-main {
+	width: 500px;
+	height: 320px;
+	border: 1px solid rgba(255,137,255,.4);
+	border-radius: 8px;
+	/*background: linear-gradient(to right, rgba(239, 239, 239, 0.7), rgba(255, 69, 246, 0.8) 130%) repeat scroll 0% 0%;*/
+	background-color: rgba(254, 215, 254, 0.73);
+	/*box-shadow: inset 0 320px 0 hsla(0,0%,100%,.4);*/
+	box-shadow: 0 3px 15px 2px rgba(255,137,255,.4)
+}
+.sora-notification-board {
+	width: 450px;
+	height: 264px;
+	position: absolute;
+	margin: 0 30px 0 30px;
+	overflow: auto;
+}
+.sora-notification-background-img {
+	/*background-image: url(Sora1.png);
+	background-color: rgba(0,0,0,.35);*/
+	background-attachment: fixed;
+	background-repeat: no-repeat;
+	background-size: 480px 270px;
+	background-position: 26px 50px;
+}
+.sora-notification-main {
+	width: 96%;
+	height: 82%;
+	margin: 0% 0 0 2%;
+	position: relative;
+	top: 15%;
+	border-radius: 8px;
+	box-shadow: 0 3px 15px 2px rgba(255,137,255,.4);
+	border: 1px solid #ffd1d1;
+}
+.sora-notification-list-group-bg {
+	color: #959595;
+}
+.sora-notification-item {
+	margin: 9px 0px;
+	font-size: 14px;
+	white-space: nowrap;
+	line-height: 100%;
+	height: 100%;
+	/* overflow: hidden; */
+	width: 92%;
+}
+.faith-sub-list li:hover {
+	position: relative;
+	/* left: 3px; */
+	/* overflow: hidden; */
+}
+.sora-notification-item .sora-notification-index {
+	width: 14px;
+	height: 14px;
+	line-height: 14px;
+	border-radius: 3px;
+	float: left;
+	list-style: none;
+	background-color: #b6b6b6;
+}
+.sora-notification-item:first-child .sora-notification-index {
+	background-color: #6856C599;
+}
+.sora-notification-item:nth-child(2) .sora-notification-index {
+	background-color: rgba(255, 165, 67, 0.7);
+}
+.sora-notification-item:nth-child(3) .sora-notification-index {
+	background-color: #37cfbf;
+}
+.sora-notification-item:nth-child(4) .sora-notification-index {
+	background-color: #43bdff;
+}
+.sora-notification-item:nth-child(5) .sora-notification-index {
+	background-color: #f866e7;
+}
+.sora-notification-item .sora-notification-index {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	color: #fff;
+	width: 16px;
+	height: 16px;
+	line-height: 16px;
+	font-size: 12px;
+	text-align: center;
+	margin: 0 6px 0 0;
+	border-radius: 2px;
+	display: inline-block;
+	vertical-align: middle;
+}
+.faith-sub-list .sora-notification-item h3 {
+	font-size: 14px;
+	display: inline-block;
+	vertical-align: middle;
+	margin: 0;
+	color: #121111;
+	font-weight: 400;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	line-height: 1rem;
+	position: relative;
+	bottom: 1.1px;
+	width: calc(100% - 16px);
+	height: auto;
+	word-wrap: break-word;
+	word-break: break-all;
+}
+.sora-notification-content-wrapper {
+	-webkit-line-clamp: 2;
+	width: calc(100% - 79px);
+	float: left;
+	position: relative;
+}
+.sora-notification-menu-main {
+	position: relative;
+	float: left;
+	width: auto;
+	height: 260px;
+	top: 1px;
+}
+.sora-notification-menu {
+	font-size: 14px;
+	line-height: 100%;
+	list-style: none;
+	width: 100%;
+	height: 30%;
+	margin: -1px auto;
+}
+.sora-notification-menu-item {
+	margin: 9px 0px;
+}
+.sora-notification-menu-span {
+	font-size: 14px;
+	color: #121111;
+	white-space: normal;
+	list-style: none;
+	word-wrap: break-word;
+	width: 14px;
+	display: block;
+	position: relative;
+	line-height: 16px;
+	margin: 0 auto;
+	height: auto;
+}
+.sora-notification-button1 {
+	background-color: rgba(156, 220, 255, 0.9);
+	border-top-left-radius: 8px;
+}
+.sora-notification-button2 {
+	background-color: rgba(253, 171, 255, 0.9);
+}
+.sora-notification-button3 {
+	background-color: rgba(166, 255, 179, 0.9);
+	border-bottom-left-radius: 8px;
+}
+.sora-notification-button1:hover, .sora-notification-button2:hover, .sora-notification-button3:hover {
+	background-color: rgba(0, 0, 0, 0);
+}
+.sora-notification-button1, .sora-notification-button2, .sora-notification-button3 {
+	/* color: #fff; 
+	border: 2px solid #ffd1d1;*/
+	display: inline-block;
+	text-align: center;
+	padding: 4px;
+	width: 26px;
+	height: 100%;
+	position: relative;
+	top: -9px;
+}
+.sora-notification-item-content {
+	-webkit-box-flex: 1;
+	-ms-flex: 1;
+	flex: 1;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: inline-block;
+	-webkit-box-pack: justify;
+	-ms-flex-pack: justify;
+	justify-content: space-between;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	-ms-flex-direction: column;
+	flex-direction: column;
+	width: 100%;
+}
+.sora-notification-content-wrapper {
+	-webkit-line-clamp: 2;
+	width: calc(100% - 80px);
+	left: 4px;
+	position: relative;
+	color: #000;
+	float: left;
+}
+.sora-notification-p {
+	line-height: 14px;
+	overflow: hidden;
+	font-size: 12px;
+	text-overflow: ellipsis;
+}

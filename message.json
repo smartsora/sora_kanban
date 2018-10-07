@@ -1,0 +1,18 @@
+{
+    "mouseover": [
+        {
+            "selector": ".post-title",
+            "text": ["要看看 {text} 麽？"]
+        },
+        {
+            "selector": "#search-bar-btn-container",
+            "text": ["主人在找什麽東西呢，需要幫忙嗎？"]
+        }
+    ],
+    "click": [
+        {
+            "selector": "#sora-landlord #sora-live2d",
+            "text": ["不要動手動腳的！快把手拿開~~", "真…真的是不知羞恥！","Hentai！", "再摸的話我可要報警了！⌇●﹏●⌇", "110嗎，這裏有個變態壹直在摸我(ó﹏ò｡)"]
+        }
+    ]
+}
