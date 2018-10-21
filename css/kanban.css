@@ -4,7 +4,7 @@
     left: 30px;
     bottom: 0;
     width: 280px;
-    height: 170px;
+    height: 220px;
     z-index: 10000;
     font-size: 0;
     transition: all .3s ease-in-out;
@@ -39,73 +39,46 @@
 	color: #121111;
 }
 .sora-hide-button {
-    position: absolute;
     top: 20px;
-    right: 0;
-    /* bottom: 30px; */
-    display: none;
-    overflow: hidden;
-    /* padding: 4px; */
+	right: 0;
     width: 60px;
     height: 20px;
-    border: 1px solid rgba(255,137,255,.4);
-    border-radius: 12px;
-    background: rgba(255,137,255,.2);
-    box-shadow: 0 3px 15px 2px rgba(255,137,255,.4);
-    text-align: center;
-    font-size: 12px;
-    cursor: pointer;
-	line-height: 18px;
-}
-.sora-hide-button:hover {
-    border: 1px solid #f4a7b9;
-    background: #f4f6f8;
 }
 .sora-nightmode-button {
-    position: absolute;
     top: 50px;
-    right: 0;
-    /* bottom: 30px; */
-    display: none;
-    overflow: hidden;
-    /* padding: 4px; */
+	right: 0;
     width: 68px;
     height: 20px;
-    border: 1px solid rgba(255,137,255,.4);
-    border-radius: 12px;
-    background: rgba(255,137,255,.2);
-    box-shadow: 0 3px 15px 2px rgba(255,137,255,.4);
-    text-align: center;
-    font-size: 12px;
-    cursor: pointer;
-	line-height: 18px;
-}
-.sora-nightmode-button:hover {
-    border: 1px solid #f4a7b9;
-    background: #f4f6f8;
 }
 .sora-kanban-notification-button {
-	position: absolute;
-    top: 80px;
+	top: 80px;
     right: 0;
-    /* bottom: 30px; */
-    display: none;
-    overflow: hidden;
-    /* padding: 4px; */
     width: 68px;
     height: 20px;
+}
+.sora-kanban-othermodel-button {
+	top: 110px;
+    right: 0;
+    width: 68px;
+    height: 20px;
+}
+.sora-hide-button, .sora-nightmode-button,.sora-kanban-notification-button, .sora-kanban-othermodel-button {
+	position: absolute;
+    display: none;
+    overflow: hidden;
     border: 1px solid rgba(255,137,255,.4);
     border-radius: 12px;
-    background: rgba(255,137,255,.2);
+    background: #f4f6f8;
     box-shadow: 0 3px 15px 2px rgba(255,137,255,.4);
     text-align: center;
     font-size: 12px;
     cursor: pointer;
 	line-height: 18px;
 }
-.sora-kanban-notification-button:hover {
+.sora-hide-button:hover, .sora-nightmode-button:hover, .sora-kanban-notification-button:hover, .sora-kanban-othermodel-button:hover {
 	border: 1px solid #f4a7b9;
-    background: #f4f6f8;
+	background-color: #d3dcfc;
+	color: #ac53ff;
 }
 @media (max-width: 860px) {
     #landlord {
@@ -263,4 +236,139 @@
     0%, 100% {
         transform: translate(0, 0) rotate(0);
     }
+}
+
+.sora-kanban-selector-board-main {
+	width: 522px;
+	height: 260px;
+	border: 1px solid rgba(255,137,255,.4);
+	border-radius: 8px;
+	background-color: rgba(254, 215, 254, 0.73);
+	box-shadow: 0 3px 15px 2px rgba(255,137,255,.4);
+}
+.sora-kanban-selector-board {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+}
+.sora-kanban-selector-background-img {
+	background-attachment: fixed;
+	background-repeat: no-repeat;
+	background-size: 480px 270px;
+	background-position: 26px 50px;
+}
+.sora-kanban-selector-main {
+	width: 96%;
+	height: 88%;
+	margin: 0% 0 0 2%;
+	position: relative;
+	top: 10%;
+	border-radius: 8px;
+	box-shadow: 0 3px 15px 2px rgba(255,137,255,.4);
+	border: 1px solid #ffd1d1;
+}
+.sora-kanban-selector-item {
+	font-size: 14px;
+	white-space: nowrap;
+	line-height: 100%;
+	overflow: hidden;
+	width: 100px;
+	display: inline-block;
+	height: 100%;
+}
+.kanban-selector-faith-sub-list {
+	font-size: 14px;
+	display: inline-block;
+	vertical-align: middle;
+	margin: 0;
+	color: #121111;
+	font-weight: 400;
+	overflow: auto;
+	white-space: nowrap;
+	line-height: 1rem;
+	position: relative;
+	bottom: 1.1px;
+	width: 100%;
+	height: 100%;
+	word-wrap: break-word;
+	word-break: break-all;
+}
+.kanban-selector-faith-sub-list::-webkit-scrollbar {
+	width: 5px;
+	height: 10px;
+}
+.kanban-selector-faith-sub-list::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	-webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+	background: #9999FF;
+}
+.kanban-selector-faith-sub-list::-webkit-scrollbar-track {
+	-webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+	border-radius: 10px;
+	background: #EDEDED;
+}
+.sora-kanban-selector-content-wrapper {
+	-webkit-line-clamp: 2;
+	width: calc(100% - 79px);
+	float: left;
+	position: relative;
+}
+.sora-kanban-selector-item-content {
+	width: 100%;
+	position: relative;
+	height: auto;
+	overflow: hidden;
+}
+.sora-kanban-selector-content-wrapper {
+	-webkit-line-clamp: 2;
+	width: 100%;
+	left: 4px;
+	position: relative;
+	color: #000;
+	float: left;
+}
+.sora-kanban-selector-p {
+	overflow: hidden;
+	font-size: 14px;
+	text-overflow: ellipsis;
+	margin: 6px 0 6px 0;
+	text-align: center;
+	color: #892f62;
+	font-weight: 600;
+}
+.sora-kanban-select-button1, .sora-kanban-select-button2 {
+	float: left;
+	border-radius: 8px;
+	box-shadow: 0 0 0 1px #EEE;
+	color: #fff;
+	border: 2px solid white;
+	display: inline-block;
+	text-align: center;
+	cursor: pointer;
+	vertical-align: text-bottom;
+	text-indent: 0;
+	text-decoration: none;
+	width: 92%;
+	height: 20px;
+	line-height: 10px;
+}
+.sora-kanban-select-button1 {
+	background-color: rgb(69,182,247);
+}
+.sora-kanban-select-button1:hover {
+	background-color: #FF6666;
+}
+.sora-kanban-select-button2 {
+	background-color: #9999FF;
+}
+.sora-kanban-select-button2:hover {
+	background-color: #5FDA5F;
+}
+.sora-kanban-selector-img {
+	width: calc(100% - 2px);
+	height: 140px;
+	float: left;
+	position: relative;
+	border: 1px solid #d074ff;
+	border-radius: 16px;
 }

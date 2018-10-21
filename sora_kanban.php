@@ -3,11 +3,13 @@
 Plugin Name: Sora_看板娘
 Plugin URI: #
 Description: 小PinnPinn的看板娘
-Version: 1.2
+Version: 1.6
 Author: Sora
 Author URI: http://www.pinnpinn.com/sora/index.html
 */
 error_reporting(E_ALL^E_NOTICE^E_WARNING);//隐藏错误提示
+require_once('kanban.class.php');
+
 function print_sora_kanban_style() {
 	wp_enqueue_style('sora_kanban',plugins_url('',__FILE__).'/css/kanban.css',false,'1.0');
 	wp_enqueue_style('sora_nitification',plugins_url('',__FILE__).'/css/nitification.css',false,'1.0');
@@ -20,181 +22,40 @@ function print_sora_kanban_js() {
 }
 add_action('wp_enqueue_scripts','print_sora_kanban_js');
 
-function update_sora_notification_list_add_data($new_status,$old_status,$post){//最新发布文章
-	if($post==null){
-		return false;
-	}
-	global $wpdb;
-	/*$var = $wpdb->get_var('SELECT ID FROM `'.$wpdb->prefix.'posts` WHERE ID='.$post_ID);
-	if($var!=null){
-		return false;
-	}*/
-	$post_ID=strval($post->ID);
-	if($new_status=='publish'&&($old_status=='new'||$old_status=='draft'||$old_status=='pending'||$old_status=='auto-draft')){//发布文章
-		$sora_notification_list_new_post_number=get_option('sora_notification_list_new_post_number');//为空返回'error'，不存在返回false
-		if($sora_notification_list_new_post_number==''||$sora_notification_list_new_post_number=='8'){
-			$sora_notification_list_new_post_number=0;
-		}elseif($sora_notification_list_new_post_number=='error'||$sora_notification_list_new_post_number==false){//不存在设置项
-			$table=$wpdb->prefix.'options';
-			$data_arr=array(
-			'sora_notification_list_new_post_number'=>'0'
-			);
-			$wpdb->insert($table,$data_arr);
-			$sora_notification_list_new_post_number=0;
-		}else{
-			$sora_notification_list_new_post_number=intval($sora_notification_list_new_post_number)%8;
-		}
-		$sora_notification_list_new_post_date_arr=get_option('sora_notification_list_new_post_date');
-		if($sora_notification_list_new_post_date_arr==''){//初次写库
-			$sora_notification_list_new_post_date_arr=array($post_ID);
-		}elseif($sora_notification_list_new_post_date_arr=='error'||$sora_notification_list_new_post_date_arr==false){
-			$table=$wpdb->prefix.'options';
-			$data_arr=array(
-			'sora_notification_list_new_post_date'=>'0'
-			);
-			$wpdb->insert($table,$data_arr);
-			$sora_notification_list_new_post_date_arr=array($post_ID);
-		}else{
-			$sora_notification_list_new_post_date_arr_count=count($sora_notification_list_new_post_date_arr);
-			if(($sora_notification_list_new_post_number+1)!=$sora_notification_list_new_post_date_arr_count){
-				$sora_notification_list_new_post_number=$sora_notification_list_new_post_date_arr_count%8;
-			}
-			if($sora_notification_list_new_post_date_arr_count<8){
-				$sora_notification_list_new_post_date_arr[]=$post_ID;//添加最新更新列表数组
-			}else{
-				$sora_notification_list_new_post_date_arr[$sora_notification_list_post_updated_number]=$post_ID;//重组最新更新列表数组
-			}
-		}
-		update_option('sora_notification_list_new_post_number',strval($sora_notification_list_new_post_number+1));//写入下一次发布文章的编号
-		update_option('sora_notification_list_new_post_date',$sora_notification_list_new_post_date_arr);//写入最新发布文章
-	}elseif($new_status=='publish'&&$old_status=='publish'){//更新文章
-		$sora_notification_list_post_updated_number=get_option('sora_notification_list_post_updated_number');//为空返回'error'，不存在返回false
-		if($sora_notification_list_post_updated_number==''||$sora_notification_list_post_updated_number=='8'){
-			$sora_notification_list_post_updated_number=0;
-		}elseif($sora_notification_list_post_updated_number=='error'||$sora_notification_list_post_updated_number==false){//不存在设置项
-			$table=$wpdb->prefix.'options';
-			$data_arr=array(
-			'sora_notification_list_post_updated_number'=>'0'
-			);
-			$wpdb->insert($table,$data_arr);
-			$sora_notification_list_post_updated_number=0;
-		}else{
-			$sora_notification_list_post_updated_number=intval($sora_notification_list_post_updated_number)%8;
-		}
-		$sora_notification_list_post_updated_date_arr=get_option('sora_notification_list_post_updated_date');
-		if($sora_notification_list_post_updated_date_arr==''){//初次写库
-			$sora_notification_list_post_updated_date_arr=array($post_ID);
-			$sora_notification_list_post_updated_number_save=1;//下次更新文章编号+1
-		}elseif($sora_notification_list_post_updated_date_arr=='error'||$sora_notification_list_post_updated_date_arr==false){
-			$table=$wpdb->prefix.'options';
-			$data_arr=array(
-			'sora_notification_list_post_updated_date'=>''
-			);
-			$wpdb->insert($table,$data_arr);
-			$sora_notification_list_post_updated_date_arr=array($post_ID);
-		}else{
-			$sora_notification_list_post_updated_date_arr_count=count($sora_notification_list_post_updated_date_arr);
-			if(($sora_notification_list_post_updated_number+1)!=$sora_notification_list_post_updated_date_arr_count){
-				$sora_notification_list_post_updated_number=$sora_notification_list_post_updated_date_arr_count%8;
-			}
-			if($sora_notification_list_post_updated_date_arr_count<8){
-				if(in_array($post_ID,$sora_notification_list_post_updated_date_arr)){
-					$post_ID_position_cache=array_search($post_ID,$sora_notification_list_post_updated_date_arr);//返回已存在的ID在数组中的位置
-					$i=0;
-					for($i=$post_ID_position_cache;$i<($sora_notification_list_post_updated_number-1);$i++){
-						$sora_notification_list_post_updated_date_arr[$i]=$sora_notification_list_post_updated_date_arr[$i+1];//将重复ID之后的所有ID前移一位
-					}
-					$sora_notification_list_post_updated_date_arr[$sora_notification_list_post_updated_number-1]=$post_ID;//将重复ID写入最后位置
-					$sora_notification_list_post_updated_number_save=$sora_notification_list_post_updated_number;//下次更新文章编号不变
-				}else{
-					$sora_notification_list_post_updated_date_arr[]=$post_ID;//添加最新更新列表数组
-					$sora_notification_list_post_updated_number_save=$sora_notification_list_post_updated_number+1;//下次更新文章编号+1
-				}
-			}else{
-				$sora_notification_list_post_updated_date_arr[$sora_notification_list_post_updated_number]=$post_ID;//重组最新更新列表数组
-				$sora_notification_list_post_updated_number_save=$sora_notification_list_post_updated_number+1;//下次更新文章编号+1
-			}
-		}
-		update_option('sora_notification_list_post_updated_number',strval($sora_notification_list_post_updated_number_save));//写入下一次更新文章的编号
-		update_option('sora_notification_list_post_updated_date',$sora_notification_list_post_updated_date_arr);//写入最新更新文章
-	}else{
-		return false;
-	}
-}
-add_action('transition_post_status','update_sora_notification_list_add_data',10,3);
-
-
-function update_sora_notification_list_post_updated($post_ID){//最新更新文章
-	if($post_ID==0||$post_ID==''){
-		return false;
-	}
-	global $wpdb;
-	$post_ID=strval($post_ID);
-	$sora_notification_list_post_updated_number=get_option('sora_notification_list_post_updated_number');//为空返回'error'，不存在返回false
-	if($sora_notification_list_post_updated_number==''||$sora_notification_list_post_updated_number=='8'){
-		$sora_notification_list_post_updated_number=0;
-	}elseif($sora_notification_list_post_updated_number=='error'||$sora_notification_list_post_updated_number==false){//不存在设置项
-		$table=$wpdb->prefix.'options';
-		$data_arr=array(
-		'sora_notification_list_post_updated_number'=>'0'
-		);
-		$wpdb->insert($table,$data_arr);
-		$sora_notification_list_post_updated_number=0;
-	}else{
-		$sora_notification_list_post_updated_number=intval($sora_notification_list_post_updated_number)%8;
-	}
-	$sora_notification_list_post_updated_date_arr=get_option('sora_notification_list_post_updated_date');
-	if($sora_notification_list_post_updated_date_arr==''){//初次写库
-		$sora_notification_list_post_updated_date_arr=array($post_ID);
-		$sora_notification_list_post_updated_number_save=1;//下次更新文章编号+1
-	}elseif($sora_notification_list_post_updated_date_arr=='error'||$sora_notification_list_post_updated_date_arr==false){
-		$table=$wpdb->prefix.'options';
-		$data_arr=array(
-		'sora_notification_list_post_updated_date'=>''
-		);
-		$wpdb->insert($table,$data_arr);
-		$sora_notification_list_post_updated_date_arr=array($post_ID);
-	}else{
-		$sora_notification_list_post_updated_date_arr_count=count($sora_notification_list_post_updated_date_arr);
-		if(($sora_notification_list_post_updated_number+1)!=$sora_notification_list_post_updated_date_arr_count){
-			$sora_notification_list_post_updated_number=$sora_notification_list_post_updated_date_arr_count%8;
-		}
-		if($sora_notification_list_post_updated_date_arr_count<8){
-			if(in_array($post_ID,$sora_notification_list_post_updated_date_arr)){
-				$post_ID_position_cache=array_search($post_ID,$sora_notification_list_post_updated_date_arr);//返回已存在的ID在数组中的位置
-				$i=0;
-				for($i=$post_ID_position_cache;$i<($sora_notification_list_post_updated_number-1);$i++){
-					$sora_notification_list_post_updated_date_arr[$i]=$sora_notification_list_post_updated_date_arr[$i+1];//将重复ID之后的所有ID前移一位
-				}
-				$sora_notification_list_post_updated_date_arr[$sora_notification_list_post_updated_number-1]=$post_ID;//将重复ID写入最后位置
-				$sora_notification_list_post_updated_number_save=$sora_notification_list_post_updated_number;//下次更新文章编号不变
-			}else{
-				$sora_notification_list_post_updated_date_arr[]=$post_ID;//添加最新更新列表数组
-				$sora_notification_list_post_updated_number_save=$sora_notification_list_post_updated_number+1;//下次更新文章编号+1
-			}
-		}else{
-			$sora_notification_list_post_updated_date_arr[$sora_notification_list_post_updated_number]=$post_ID;//重组最新更新列表数组
-			$sora_notification_list_post_updated_number_save=$sora_notification_list_post_updated_number+1;//下次更新文章编号+1
-		}
-	}
-	update_option('sora_notification_list_post_updated_number',strval($sora_notification_list_post_updated_number_save));//写入下一次更新文章的编号
-	update_option('sora_notification_list_post_updated_date',$sora_notification_list_post_updated_date_arr);//写入最新更新文章
-}
-//add_action('post_updated','update_sora_notification_list_post_updated');
-
-
 function create_sora_notification_data(){
-	$sora_notification_list_new_post_date_arr=get_option('sora_notification_list_new_post_date');
-	if($sora_notification_list_new_post_date_arr==''||$sora_notification_list_new_post_date_arr=='error'||$sora_notification_list_new_post_date_arr==false){//内容被手动清空
-		$result='null';
+	global $wpdb;
+	$db_results = $wpdb->get_results('SELECT ID FROM `'.$wpdb->prefix.'posts` where post_status = "publish" order by ID desc limit 0,8');
+	if($db_results==null){
+		return false;
+	}
+	foreach($db_results as $db_result){
+		$sora_notification_list_new_post_date_arr[]=$db_result->ID;
 	}
 	$sora_notification_list_new_post_date_arr_count=count($sora_notification_list_new_post_date_arr);
-	$sora_notification_list_post_updated_date_arr=get_option('sora_notification_list_post_updated_date');
-	if($sora_notification_list_post_updated_date_arr==''||$sora_notification_list_post_updated_date_arr=='error'||$sora_notification_list_post_updated_date_arr==false){//内容被手动清空
-		$result='null';
+	unset($db_results,$db_result);
+	
+	//SELECT * FROM wp_sora_posts where post_status = "publish" order by post_modified desc limit 0,8;
+	$db_results = $wpdb->get_results('SELECT ID FROM `'.$wpdb->prefix.'posts` where post_status = "publish" order by post_modified desc limit 0,18');
+	if($db_results==null){
+		return false;
+	}
+	foreach($db_results as $db_result){
+		$sora_notification_list_post_updated_date_arr_raw[]=$db_result->ID;
+	}
+	$sora_notification_list_post_updated_date_arr_raw_count=count($sora_notification_list_post_updated_date_arr_raw);
+	$i=0;
+	$j=0;
+	for($i=0;$i<$sora_notification_list_post_updated_date_arr_raw_count;$i++){
+		if($j==8){
+			break;
+		}
+		if(!in_array($sora_notification_list_new_post_date_arr[$i], $sora_notification_list_post_updated_date_arr_raw)){
+			$sora_notification_list_post_updated_date_arr[]=$sora_notification_list_post_updated_date_arr_raw[$i];
+			$j++;
+		}
 	}
 	$sora_notification_list_post_updated_date_arr_count=count($sora_notification_list_post_updated_date_arr);
-	$i=0;
+	unset($db_results,$db_result);
 	$user_img_url=plugins_url('',__FILE__).'/img/user.png';
 	$comment_img_url=plugins_url('',__FILE__).'/img/comment.png';
 	$html_text_new_post_cache='';
@@ -273,10 +134,10 @@ function create_sora_notification_data(){
 				</div>
 			</div>
 			<div id="sora-notification-board" class="sora-notification-board">
-				<ul id="faith-sub-list" class="faith-sub-list">
+				<ul id="notification-faith-sub-list" class="notification-faith-sub-list">
 					'.$html_text_new_post_cache.'
 				</ul>
-				<ul id="faith-sub-list" class="faith-sub-list" style="display:none">
+				<ul id="notification-faith-sub-list" class="notification-faith-sub-list" style="display:none">
 					'.$html_text_post_updated_cache.'
 				</ul>
 			</div>
@@ -285,16 +146,36 @@ function create_sora_notification_data(){
 	return $result;
 }
 
+function create_sora_kanban_selector_data(){
+	$url=home_url().'/';
+	$img_url_base=plugins_url('',__FILE__).'/img/characters/';
+	$characters=new kanban_characters();
+	$name_arr=$characters->name;
+	$name_arr_count=count($name_arr);
+	$img_url_arr=$characters->img_url;
+	$img_url_arr_count=count($img_url_arr);
+	if($name_arr_count!=$img_url_arr_count){
+		return false;
+	}
+	$i=0;
+	$result_main_part='';
+	for($i=0;$i<$name_arr_count;$i++){
+		$result_main_part.='<li class="sora-kanban-selector-item" data-id="'.strval($i).'"><div class="sora-kanban-selector-item-content"><img src="'.$img_url_base.$img_url_arr[$i].'" class="sora-kanban-selector-img"><div class="sora-kanban-selector-content-wrapper">	<p class="sora-kanban-selector-p">'.$name_arr[$i].'</p><div class="sora-kanban-selector-buttons" style="width: 100%;"><button class="sora-kanban-select-button1">和她玩</button><button class="sora-kanban-select-button2">换衣服</button></div></div></div></li>';
+	}
+	$result='<div id="sora-kanban-selector-board-main" class="sora-kanban-selector-board-main" style="position: relative; left: 280px; bottom: 450px; display: none;"><div id="sora-kanban-selector-close" class="sora-kanban-selector-close"></div><div id="sira-kanban-selector-main" class="sora-kanban-selector-main sora-kanban-selector-background-img"><div id="sora-kanban-selector-board" class="sora-kanban-selector-board"><ul id="kanban-selector-faith-sub-list" class="kanban-selector-faith-sub-list">'.$result_main_part.'</ul></div></div></div>';
+	return $result;
+}
+
 function add_sora_kanban_character(){
 	$url=home_url().'/';
-	$message_Path='/wp-content/plugins/sora_live2d/';
+	$message_Path='/wp-content/plugins/sora_kanban/';
 	$live2d_js_main_path=plugins_url('',__FILE__).'/js/live2d.js';
 	$live2d_js_message_path=plugins_url('',__FILE__).'/js/message.js';
-	$live2d_json_model_path=plugins_url('',__FILE__).'/model/Terisa/model.json';
 	$sora_notification_js_path=plugins_url('',__FILE__).'/js/sora-notification.js';
-	$html_resule=create_sora_notification_data();
+	$html_resule_notification=create_sora_notification_data();
+	$html_resule_kanban_selector=create_sora_kanban_selector_data();
 	echo <<<EOF
-	<div id="sora-landlord">
+	<div id="sora-landlord" style="display:none;">
 		<div class="sora-message" style="opacity:0"></div>
 		<canvas id="sora-live2d" width="280" height="360" class="live2d"></canvas>
 		<div class="sora-hide-button"><i class="fa fa-eye-slash" aria-hidden="true"></i>隐藏</div>
@@ -302,19 +183,18 @@ function add_sora_kanban_character(){
 			<i class="fa fa-adjust" aria-hidden="true" style="float: left;position: relative;left: 4px;line-height: 20px;"></i>
 			<p class="sora-nightmode-p">夜间模式</p>
 		</div>
+		<div class="sora-kanban-othermodel-button"><i class="fa fa-users" aria-hidden="true"></i>更多人物</div>
 		<div class="sora-kanban-notification-button"><i class="fa fa-commenting-o" aria-hidden="true"></i>小站动态</div>
-		$html_resule
+		$html_resule_notification
+		$html_resule_kanban_selector
 	</div>
 	<script type="text/javascript">
 		var message_Path = '$message_Path';
-		var home_Path = '$url';  //此处为你的域名，必须带斜杠
+		var home_Path = '$url';
 	</script>
 	<script type="text/javascript" src="$live2d_js_main_path"></script>
 	<script type="text/javascript" src="$live2d_js_message_path"></script>
 	<script type="text/javascript" src="$sora_notification_js_path"></script>
-	<script type="text/javascript">
-		loadlive2d("sora-live2d", "$live2d_json_model_path");
-	</script>
 EOF;
 }
 add_action('wp_footer','add_sora_kanban_character');

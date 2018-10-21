@@ -1,20 +1,30 @@
 $(document).ready(function(){
 	$('div.sora-notification-menu').eq(0).click(function(){
-		$(this).parent().parent().find('ul.faith-sub-list').eq(0).show();
-		$(this).parent().parent().find('ul.faith-sub-list').eq(1).hide();
+		$(this).parent().parent().find('ul.notification-faith-sub-list').eq(0).show();
+		$(this).parent().parent().find('ul.notification-faith-sub-list').eq(1).hide();
+		
+		$('div.sora-notification-board').find('h3.sora-notification-h3').show();
+		$('ul.notification-faith-sub-list').eq(0).find('h3.sora-notification-h3').eq(0).hide();
+		$('div.sora-notification-board').find('div.sora-notification-item-content').hide();
+		$('ul.notification-faith-sub-list').eq(0).find('div.sora-notification-item-content').eq(0).show();
 	})
 	$('div.sora-notification-menu').eq(1).click(function(){
-		$(this).parent().parent().find('ul.faith-sub-list').eq(0).hide();
-		$(this).parent().parent().find('ul.faith-sub-list').eq(1).show();
+		$(this).parent().parent().find('ul.notification-faith-sub-list').eq(0).hide();
+		$(this).parent().parent().find('ul.notification-faith-sub-list').eq(1).show();
+		
+		$('div.sora-notification-board').find('h3.sora-notification-h3').show();
+		$('ul.notification-faith-sub-list').eq(1).find('h3.sora-notification-h3').eq(0).hide();
+		$('div.sora-notification-board').find('div.sora-notification-item-content').hide();
+		$('ul.notification-faith-sub-list').eq(1).find('div.sora-notification-item-content').eq(0).show();
 	})
 	$('div.sora-notification-menu').eq(2).click(function(){
-		$(this).parent().parent().find('ul.faith-sub-list').eq(0).hide();
-		$(this).parent().parent().find('ul.faith-sub-list').eq(1).hide();
+		$(this).parent().parent().find('ul.notification-faith-sub-list').eq(0).hide();
+		$(this).parent().parent().find('ul.notification-faith-sub-list').eq(1).hide();
 	})
 	$('div.sora-notification-board').on('mouseenter','h3.sora-notification-h3',function(e){
-		$(document).find('h3.sora-notification-h3').show();
+		$('div.sora-notification-board').find('h3.sora-notification-h3').show();
 		$(this).parent().find('h3.sora-notification-h3').hide();
-		$(document).find('div.sora-notification-item-content').hide();
+		$('div.sora-notification-board').find('div.sora-notification-item-content').hide();
 		$(this).parent().find('div.sora-notification-item-content').show();
 	})
 })
